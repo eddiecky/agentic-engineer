@@ -3,8 +3,7 @@ import asyncio
 from fastapi import APIRouter, BackgroundTasks, HTTPException, Request
 
 from agents.workflow import AgentState, workflow
-from database import SessionLocal
-from models import RepoMapping
+from store import RepoMappingStore
 
 router = APIRouter(prefix="/webhooks", tags=["webhooks"])
 
@@ -27,22 +26,13 @@ async def jira_webhook(request: Request, background_tasks: BackgroundTasks):
     if not issue_key or not project_key:
         raise HTTPException(status_code=400, detail="Missing issue key or project key")
 
-    db = SessionLocal()
-    try:
-        mapping = (
-            db.query(RepoMapping)
-            .filter(RepoMapping.jira_project_key == project_key)
-            .first()
-        )
-    finally:
-        db.close()
-
+    mapping = RepoMappingStore.get_by_project(project_key)
     if not mapping:
         raise HTTPException(
             status_code=404, detail=f"No repo mapping for project {project_key}"
         )
 
-    repo_url = f"https://github.com/{mapping.github_repo}.git"
+    repo_url = f"https://github.com/{mapping['github_repo']}.git"
 
     initial_state = AgentState(
         ticket_id=issue_key,
@@ -50,8 +40,8 @@ async def jira_webhook(request: Request, background_tasks: BackgroundTasks):
         repo_url=repo_url,
         local_path="",
         branch_name="",
-        repo_full_name=mapping.github_repo,
-        base_branch=mapping.base_branch or "main",
+        repo_full_name=mapping["github_repo"],
+        base_branch=mapping.get("base_branch", "main"),
         code_diff=[],
         pr_url="",
         error="",

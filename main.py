@@ -7,13 +7,10 @@ from fastapi.responses import HTMLResponse, Response
 from api.admin import router as admin_router
 from api.admin_auth import admin_auth
 from api.webhooks import router as webhooks_router
-from database import engine
-from models import Base
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    Base.metadata.create_all(bind=engine)
     yield
 
 

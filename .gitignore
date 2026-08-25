@@ -5,6 +5,10 @@
 # Claude / local AI workspace
 .claude/
 
+# Data
+/data/
+data/
+
 # Python
 __pycache__/
 *.py[cod]

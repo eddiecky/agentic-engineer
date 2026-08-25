@@ -18,27 +18,24 @@ def test_webhook_missing_keys():
     assert resp.status_code == 400
 
 
-@patch("api.webhooks.SessionLocal")
-def test_webhook_no_mapping(mock_session_local):
-    mock_db = MagicMock()
-    mock_db.query.return_value.filter.return_value.first.return_value = None
-    mock_session_local.return_value = mock_db
+@patch("api.webhooks.RepoMappingStore.get_by_project")
+def test_webhook_no_mapping(mock_get):
+    mock_get.return_value = None
 
     payload = {"issue": {"key": "PROJ-1", "fields": {"project": {"key": "PROJ"}}}}
     resp = client.post("/webhooks/jira", json=payload)
     assert resp.status_code == 404
 
 
-@patch("api.webhooks.SessionLocal")
+@patch("api.webhooks.RepoMappingStore.get_by_project")
 @patch("api.webhooks.workflow")
-def test_webhook_success(mock_workflow, mock_session_local):
-    mapping = MagicMock()
-    mapping.github_repo = "acme/rocket"
-    mapping.base_branch = "main"
-
-    mock_db = MagicMock()
-    mock_db.query.return_value.filter.return_value.first.return_value = mapping
-    mock_session_local.return_value = mock_db
+def test_webhook_success(mock_workflow, mock_get):
+    mock_get.return_value = {
+        "id": 1,
+        "jira_project_key": "PROJ",
+        "github_repo": "acme/rocket",
+        "base_branch": "main",
+    }
 
     payload = {"issue": {"key": "PROJ-1", "fields": {"project": {"key": "PROJ"}}}}
     resp = client.post("/webhooks/jira", json=payload)
