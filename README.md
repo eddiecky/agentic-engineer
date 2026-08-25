@@ -54,7 +54,17 @@ Manually create `data/repo_mappings.json` to map JIRA projects to GitHub repos:
    ngrok http 8000
    ```
 
-4. **Set the JIRA webhook URL** to the tunnel URL (e.g. `https://abc123.ngrok.io/webhooks/jira`).
+4. **Set the JIRA webhook URL**
+   Go to **JIRA Settings → System → Webhooks** and create a new webhook:
+
+   | Setting | Value |
+   |---------|-------|
+   | **URL** | `https://<your-ngrok-url>/webhooks/jira` |
+   | **Events** | Issue updated |
+
+   The full URL will look like `https://abc123.ngrok.io/webhooks/jira`.
+
+   **Tip:** If using JIRA Automation instead of native webhooks, create a rule triggered on **"Transitioned to status = In Progress"** → then send a web request to the URL above.
 
 ## Project Structure
 
