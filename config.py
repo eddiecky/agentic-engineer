@@ -28,3 +28,19 @@ class Settings(BaseSettings):
 
 
 settings = Settings()
+
+
+def resolve_config(key: str, default=None):
+    """Read configuration value from DB first, then fall back to .env/settings."""
+    try:
+        from database import SessionLocal
+        from models import Configuration
+
+        db = SessionLocal()
+        row = db.query(Configuration).filter(Configuration.key == key).first()
+        db.close()
+        if row and row.value:
+            return row.value
+    except Exception:
+        pass
+    return getattr(settings, key, default)

@@ -4,7 +4,7 @@ from typing import List, Tuple
 
 import httpx
 
-from config import settings
+from config import resolve_config
 
 
 class LLMProvider(abc.ABC):
@@ -15,7 +15,7 @@ class LLMProvider(abc.ABC):
 
 class OpenRouterProvider(LLMProvider):
     def __init__(self, api_key: str = None, model: str = "anthropic/claude-3.5-sonnet"):
-        self.api_key = api_key or settings.OPENROUTER_API_KEY
+        self.api_key = api_key or resolve_config("OPENROUTER_API_KEY")
         self.model = model
         self.base_url = "https://openrouter.ai/api/v1"
 
@@ -58,9 +58,9 @@ class CopilotProvider(LLMProvider):
 
 class LLMService:
     def __init__(self, provider: str = None):
-        provider = provider or settings.DEFAULT_LLM_PROVIDER
+        provider = provider or resolve_config("DEFAULT_LLM_PROVIDER")
         if provider == "openrouter":
-            self.provider: LLMProvider = OpenRouterProvider(model=settings.OPENROUTER_MODEL)
+            self.provider: LLMProvider = OpenRouterProvider(model=resolve_config("OPENROUTER_MODEL"))
         elif provider == "copilot":
             self.provider: LLMProvider = CopilotProvider()
         else:

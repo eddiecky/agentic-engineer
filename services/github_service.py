@@ -4,12 +4,12 @@ from pathlib import Path
 
 from github import Github
 
-from config import settings
+from config import resolve_config
 
 
 class GitHubService:
     def __init__(self, token: str = None):
-        self.token = token or settings.GITHUB_TOKEN
+        self.token = token or resolve_config("GITHUB_TOKEN")
         self.github = Github(self.token)
 
     def clone_or_pull(self, repo_url: str, local_path: str) -> str:
