@@ -51,8 +51,6 @@
       <h3>GitHub</h3>
       <label>Token</label>
       <input type="password" id="github_token">
-      <label>Default Org</label>
-      <input type="text" id="github_default_org">
     </div>
     <div class="card">
       <h3>LLM</h3>
@@ -112,7 +110,6 @@ async function loadConfig() {
   document.getElementById('jira_username').value = cfg.JIRA_USERNAME || '';
   document.getElementById('jira_api_token').value = cfg.JIRA_API_TOKEN || '';
   document.getElementById('github_token').value = cfg.GITHUB_TOKEN || '';
-  document.getElementById('github_default_org').value = cfg.GITHUB_DEFAULT_ORG || '';
   document.getElementById('llm_provider').value = cfg.DEFAULT_LLM_PROVIDER || 'openrouter';
   document.getElementById('openrouter_api_key').value = cfg.OPENROUTER_API_KEY || '';
 }
@@ -124,7 +121,6 @@ async function saveConfig() {
       {key:'JIRA_USERNAME', value: document.getElementById('jira_username').value},
       {key:'JIRA_API_TOKEN', value: document.getElementById('jira_api_token').value},
       {key:'GITHUB_TOKEN', value: document.getElementById('github_token').value},
-      {key:'GITHUB_DEFAULT_ORG', value: document.getElementById('github_default_org').value},
       {key:'DEFAULT_LLM_PROVIDER', value: document.getElementById('llm_provider').value},
       {key:'OPENROUTER_API_KEY', value: document.getElementById('openrouter_api_key').value},
     ]

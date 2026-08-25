@@ -15,7 +15,6 @@ class Settings(BaseSettings):
 
     # GitHub
     GITHUB_TOKEN: str = ""
-    GITHUB_DEFAULT_ORG: str = ""
 
     # LLM
     OPENROUTER_API_KEY: str = ""
