@@ -2,27 +2,59 @@
 
 An AI agent that receives JIRA webhooks and autonomously opens GitHub PRs with LLM-enhanced code.
 
+## Configuration
+
+### 1. Environment variables (`.env`)
+
+Create a `.env` file in the project root:
+
+```bash
+# JIRA
+JIRA_URL=https://your-domain.atlassian.net
+JIRA_USERNAME=you@example.com
+JIRA_API_TOKEN=your_token
+
+# GitHub
+GITHUB_TOKEN=ghp_xxx
+
+# LLM
+OPENROUTER_API_KEY=sk-or-v1-xxx
+OPENROUTER_MODEL=anthropic/claude-3.5-sonnet
+DEFAULT_LLM_PROVIDER=openrouter
+```
+
+### 2. Repo mappings (`data/repo_mappings.json`)
+
+Manually create `data/repo_mappings.json` to map JIRA projects to GitHub repos:
+
+```json
+{
+  "1": {
+    "jira_project_key": "PROJ",
+    "github_repo": "acme/rocket",
+    "base_branch": "main"
+  }
+}
+```
+
 ## Quick Start
 
-1. **Run setup** (creates a Python virtual environment and installs dependencies)
+1. **Install dependencies**
    ```bash
-   ./setup.sh
-   source .venv/bin/activate
+   pip install -e ".[test]"
    ```
 
-2. **Configure environment**
-   ```bash
-   cp .env.example .env
-   # Edit .env with your JIRA, GitHub, and LLM credentials
-   ```
-
-3. **Run the server**
+2. **Run the server**
    ```bash
    uvicorn main:app --reload
    ```
 
-4. **Open the admin panel**
-   Navigate to http://localhost:8000/admin
+3. **Expose the webhook endpoint**
+   ```bash
+   ngrok http 8000
+   ```
+
+4. **Set the JIRA webhook URL** to the tunnel URL (e.g. `https://abc123.ngrok.io/webhooks/jira`).
 
 ## Project Structure
 
@@ -31,17 +63,13 @@ An AI agent that receives JIRA webhooks and autonomously opens GitHub PRs with L
 ├── config.py               # Pydantic settings (reads .env)
 ├── store.py                # JSON file store for repo mappings
 ├── api/
-│   ├── webhooks.py         # JIRA webhook receiver
-│   ├── admin.py            # Repo mappings CRUD
-│   └── admin_auth.py       # HTTP Basic Auth for admin
+│   └── webhooks.py         # JIRA webhook receiver
 ├── services/
 │   ├── jira_service.py     # JIRA API client
 │   ├── github_service.py   # GitHub + git CLI wrappers
 │   └── llm_service.py      # LLM provider abstraction
 ├── agents/
 │   └── workflow.py         # LangGraph orchestration
-├── admin_static/
-│   └── index.html          # Admin frontend (localhost-only)
 └── tests/
     └── ...                 # Test suite
 ```
@@ -51,20 +79,3 @@ An AI agent that receives JIRA webhooks and autonomously opens GitHub PRs with L
 ```bash
 pytest
 ```
-
-## Receiving JIRA Webhooks
-
-JIRA sends webhooks from Atlassian's public servers, so the app must be reachable from the internet.
-
-### Local development — use a tunnel
-
-```bash
-# Example with ngrok
-ngrok http 8000
-```
-
-Then set the JIRA webhook URL to the generated public URL (e.g. `https://abc123.ngrok.io/webhooks/jira`).
-
-### Production — deploy to a public server
-
-Deploy to any cloud provider (AWS, GCP, Heroku, Fly.io, etc.) and use the public domain as the webhook URL.
