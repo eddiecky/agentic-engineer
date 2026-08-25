@@ -1,0 +1,8 @@
+{
+  "_comment": "Map JIRA project keys to GitHub repos. Edit this file directly.",
+  "1": {
+    "jira_project_key": "PROJ",
+    "github_repo": "owner/repo-name",
+    "base_branch": "main"
+  }
+}

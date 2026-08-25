@@ -6,8 +6,7 @@
 .claude/
 
 # Data
-/data/
-data/
+*.db
 
 # Python
 __pycache__/
