@@ -23,7 +23,8 @@ app = FastAPI(title="Agentic Engineer", lifespan=lifespan)
 @app.middleware("http")
 async def admin_localhost_only(request: Request, call_next):
     path = request.url.path
-    if path.startswith(("/admin", "/admin/api")) and request.client.host not in ("127.0.0.1", "::1"):
+    client = request.client
+    if path.startswith(("/admin", "/admin/api")) and client and client.host not in ("127.0.0.1", "::1"):
         return Response(status_code=403, content="Forbidden: admin restricted to localhost")
     response = await call_next(request)
     return response
