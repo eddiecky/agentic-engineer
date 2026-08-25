@@ -19,6 +19,7 @@ class Settings(BaseSettings):
 
     # LLM
     OPENROUTER_API_KEY: str = ""
+    OPENROUTER_MODEL: str = "anthropic/claude-3.5-sonnet"
     DEFAULT_LLM_PROVIDER: str = "openrouter"  # or "copilot"
 
     # App

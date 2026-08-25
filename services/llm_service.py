@@ -60,7 +60,7 @@ class LLMService:
     def __init__(self, provider: str = None):
         provider = provider or settings.DEFAULT_LLM_PROVIDER
         if provider == "openrouter":
-            self.provider: LLMProvider = OpenRouterProvider()
+            self.provider: LLMProvider = OpenRouterProvider(model=settings.OPENROUTER_MODEL)
         elif provider == "copilot":
             self.provider: LLMProvider = CopilotProvider()
         else:
