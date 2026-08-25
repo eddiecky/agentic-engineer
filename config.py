@@ -24,6 +24,7 @@ class Settings(BaseSettings):
     # App
     DATABASE_URL: str = "sqlite:///./agentic_engineer.db"
     LOG_LEVEL: str = "INFO"
+    ADMIN_PASSWORD: str = ""
 
 
 settings = Settings()

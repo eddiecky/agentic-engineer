@@ -62,6 +62,11 @@
       <label>OpenRouter API Key</label>
       <input type="password" id="openrouter_api_key">
     </div>
+    <div class="card">
+      <h3>Admin</h3>
+      <label>Admin Panel Password</label>
+      <input type="password" id="admin_password" placeholder="Leave empty to disable password">
+    </div>
     <button class="save" onclick="saveConfig()">Save Configuration</button>
   </div>
 
@@ -112,6 +117,7 @@ async function loadConfig() {
   document.getElementById('github_token').value = cfg.GITHUB_TOKEN || '';
   document.getElementById('llm_provider').value = cfg.DEFAULT_LLM_PROVIDER || 'openrouter';
   document.getElementById('openrouter_api_key').value = cfg.OPENROUTER_API_KEY || '';
+  document.getElementById('admin_password').value = cfg.ADMIN_PASSWORD || '';
 }
 
 async function saveConfig() {
@@ -123,6 +129,7 @@ async function saveConfig() {
       {key:'GITHUB_TOKEN', value: document.getElementById('github_token').value},
       {key:'DEFAULT_LLM_PROVIDER', value: document.getElementById('llm_provider').value},
       {key:'OPENROUTER_API_KEY', value: document.getElementById('openrouter_api_key').value},
+      {key:'ADMIN_PASSWORD', value: document.getElementById('admin_password').value},
     ]
   };
   const r = await fetch('/admin/api/config', {method:'PUT', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload)});
