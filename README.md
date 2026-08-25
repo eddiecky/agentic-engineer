@@ -28,12 +28,12 @@ An AI agent that receives JIRA webhooks and autonomously opens GitHub PRs with L
 
 ```
 ├── main.py                 # FastAPI entrypoint
-├── config.py               # Pydantic settings
-├── database.py             # SQLAlchemy setup
-├── models.py               # DB models
+├── config.py               # Pydantic settings (reads .env)
+├── store.py                # JSON file store for repo mappings
 ├── api/
 │   ├── webhooks.py         # JIRA webhook receiver
-│   └── admin.py            # Configuration CRUD
+│   ├── admin.py            # Repo mappings CRUD
+│   └── admin_auth.py       # HTTP Basic Auth for admin
 ├── services/
 │   ├── jira_service.py     # JIRA API client
 │   ├── github_service.py   # GitHub + git CLI wrappers
@@ -41,7 +41,7 @@ An AI agent that receives JIRA webhooks and autonomously opens GitHub PRs with L
 ├── agents/
 │   └── workflow.py         # LangGraph orchestration
 ├── admin_static/
-│   └── index.html          # Admin frontend
+│   └── index.html          # Admin frontend (localhost-only)
 └── tests/
     └── ...                 # Test suite
 ```
