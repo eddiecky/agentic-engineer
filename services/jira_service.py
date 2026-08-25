@@ -1,13 +1,13 @@
 import httpx
 
-from config import resolve_config
+from config import settings
 
 
 class JiraService:
     def __init__(self, base_url: str = None, username: str = None, api_token: str = None):
-        self.base_url = (base_url or resolve_config("JIRA_URL")).rstrip("/")
-        self.username = username or resolve_config("JIRA_USERNAME")
-        self.api_token = api_token or resolve_config("JIRA_API_TOKEN")
+        self.base_url = (base_url or settings.JIRA_URL).rstrip("/")
+        self.username = username or settings.JIRA_USERNAME
+        self.api_token = api_token or settings.JIRA_API_TOKEN
 
     async def get_ticket(self, ticket_id: str) -> dict:
         url = f"{self.base_url}/rest/api/2/issue/{ticket_id}"

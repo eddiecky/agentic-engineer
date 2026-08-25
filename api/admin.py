@@ -3,44 +3,13 @@ from pydantic import BaseModel
 from sqlalchemy.orm import Session
 
 from database import get_db
-from models import Configuration, RepoMapping
+from models import RepoMapping
 
 router = APIRouter(prefix="/admin/api", tags=["admin"])
 
 
 # ---------------------------------------------------------------------------
-# Configuration
-# ---------------------------------------------------------------------------
-
-class ConfigItem(BaseModel):
-    key: str
-    value: str
-
-
-class ConfigUpdate(BaseModel):
-    items: list[ConfigItem]
-
-
-@router.get("/config")
-def list_config(db: Session = Depends(get_db)):
-    rows = db.query(Configuration).all()
-    return {row.key: row.value for row in rows}
-
-
-@router.put("/config")
-def update_config(payload: ConfigUpdate, db: Session = Depends(get_db)):
-    for item in payload.items:
-        row = db.query(Configuration).filter(Configuration.key == item.key).first()
-        if row:
-            row.value = item.value
-        else:
-            db.add(Configuration(key=item.key, value=item.value))
-    db.commit()
-    return {"status": "updated"}
-
-
-# ---------------------------------------------------------------------------
-# Repo mappings
+# Repo mappings only — config lives in .env
 # ---------------------------------------------------------------------------
 
 class RepoMappingCreate(BaseModel):
