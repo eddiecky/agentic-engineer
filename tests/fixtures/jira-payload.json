@@ -1,0 +1,19 @@
+{
+  "issue": {
+    "key": "PROJ-1",
+    "fields": {
+      "project": {
+        "key": "PROJ"
+      },
+      "summary": "Add user authentication",
+      "description": "We need JWT-based auth on all API routes.",
+      "status": {
+        "name": "In Progress"
+      },
+      "issuetype": {
+        "name": "Story"
+      }
+    }
+  },
+  "issue_event_type_name": "issue_generic"
+}
